@@ -17,26 +17,25 @@ import json
 
 from sklearn.cross_validation import train_test_split
 
-def binarize(x, sz=92):
+def binarize(x, sz=0):
+    sz = len_chars
     return tf.to_float(tf.one_hot(x, sz, on_value=1, off_value=0, axis=-1))
 
 def binarize_outshape(in_shape):
-    return in_shape[0], in_shape[1], 92
+    return in_shape[0], in_shape[1], len_chars
 
 
-data = pd.read_csv('trial.csv')
 
-print(data.label)
 
-print(data.Headline)
+data = pd.read_csv('data.csv')
 
 txt = ''
 docs = [] #body, line by line
 labels = [] #label
 
-for content, label in zip(data.Headline, data.label):
-   docs.append(content)  
-   labels.append(label)
+for content, label in zip(data.Headline, data.Label):
+    docs.append(content)  
+    labels.append(label)
 
 num_sent = []
 for doc in docs:
@@ -46,6 +45,8 @@ for doc in docs:
 maxlen = len(max(docs, key = len)) #max length of an element in docs list
 print("maxlen: ", maxlen)
 chars = set(txt)
+global len_chars
+len_chars = len(chars)
 print('total chars:', len(chars))
 char_indices = dict((c, i) for i, c in enumerate(chars))
 indices_char = dict((i, c) for i, c in enumerate(chars))
